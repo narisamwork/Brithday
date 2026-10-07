@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Kitty Adventure! 🌸</title>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-pink: #ffe6f2;
+            --main-pink: #ff66b2;
+            --dark-pink: #d9418c;
+            --light-pink: #fff0f5;
+            --accent-yellow: #ffd700;
+            --text-color: #5d3a53;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color);
+            padding: 15px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+            border: 4px solid #fff;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--dark-pink);
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 0px #fff;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ตกแต่งคิตตี้จำลอง */
+        .kitty-avatar {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .btn {
+            background-color: var(--main-pink);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 102, 178, 0.4);
+            transition: all 0.2s;
+            margin-top: 15px;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* มินิเกมส์ 1: เก็บหัวใจ */
+        #game1-area {
+            width: 100%;
+            height: 220px;
+            background: var(--light-pink);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            border: 2px dashed var(--main-pink);
+            margin-top: 10px;
+        }
+
+        .collectible {
+            position: absolute;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        /* มินิเกมส์ 2: เติมเค้กวันเกิด */
+        .cake-box {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .candle-slot {
+            width: 50px;
+            height: 80px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            border: 2px solid #ddd;
+            transition: 0.3s;
+        }
+
+        .candle-slot.lit {
+            background: #fffacd;
+            border-color: var(--accent-yellow);
+            box-shadow: 0 0 10px var(--accent-yellow);
+        }
+
+        /* มินิเกมส์ 3: จับคู่กล่องของขวัญ */
+        .gift-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .gift-card {
+            background: var(--light-pink);
+            border: 2px solid var(--main-pink);
+            border-radius: 12px;
+            padding: 15px 0;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .gift-card.opened {
+            background: #fff;
+            transform: scale(0.95);
+        }
+
+        /* หน้าการ์ดจดหมายสำเร็จภารกิจ */
+        .postcard-container {
+            background: #fff;
+            border-radius: 20px;
+            border: 3px solid #ffb6c1;
+            padding: 15px;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: left;
+        }
+
+        .photo-frame {
+            width: 120px;
+            height: 120px;
+            background: var(--light-pink);
+            border: 3px dashed var(--main-pink);
+            border-radius: 15px;
+            margin: 0 auto 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;     
+            margin: auto;
+        }
+
+        .photo-placeholder-text {
+            font-size: 0.8rem;
+            color: var(--dark-pink);
+            text-align: center;
+            padding: 5px;
+        }
+
+        .letter-content {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #666;
+            background: #fff9fb;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ffedf0;
+        }
+
+        .letter-content h3 {
+            color: var(--dark-pink);
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .progress-bar {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--dark-pink);
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- หน้าแรก: ต้อนรับ -->
+        <div id="screen-welcome" class="screen active">
+            <div class="kitty-avatar">🐱🎀</div>
+            <h1>สุขสันต์วันเกิดนะจ๊ะ!</h1>
+            <p style="margin-bottom: 15px; font-size: 0.95rem;">มาร่วมทำภารกิจผจญภัยกับคิตตี้น้อย เพื่อเปิดกล่องของขวัญและรับการ์ดอวยพรกันเถอะ!</p>
+            <button class="btn" onclick="startGame()">เริ่มผจญภัย 🚀</button>
+        </div>
+
+        <!-- เกมส์ที่ 1: เก็บหัวใจ -->
+        <div id="screen-game1" class="screen">
+            <div class="progress-bar">ด่านที่ 1/3: เก็บหัวใจให้ครบ 5 ดวง 💖</div>
+            <div id="game1-area"></div>
+            <p style="font-size: 0.85rem; margin-top: 8px; color: #888;">แตะที่หัวใจที่ลอยขึ้นมา!</p>
+        </div>
+
+        <!-- เกมส์ที่ 2: จุดเทียนเค้ก -->
+        <div id="screen-game2" class="screen">
+            <div class="progress-bar">ด่านที่ 2/3: จุดเทียนวันเกิด 🎂</div>
+            <p style="font-size: 0.9rem; margin-top: 5px;">แตะที่แท่งเทียนให้ครบทุกแท่ง</p>
+            <div class="cake-box">
+                <div class="candle-slot" onclick="lightCandle(this)">🕯️</div>
+                <div class="candle-slot" onclick="lightCandle(this)">🕯️</div>
+                <div class="candle-slot" onclick="lightCandle(this)">🕯️</div>
+            </div>
+            <button id="next-btn-2" class="btn" style="display:none;" onclick="goToGame3()">ลุยด่านสุดท้าย ✨</button>
+        </div>
+
+        <!-- เกมส์ที่ 3: เปิดกล่องสุ่ม -->
+        <div id="screen-game3" class="screen">
+            <div class="progress-bar">ด่านที่ 3/3: ตามหากล่องคิตตี้นำโชค 🎁</div>
+            <p style="font-size: 0.9rem; margin-top: 5px;">เลือกกล่องที่ซ่อนโบว์คิตตี้เอาไว้</p>
+            <div class="gift-grid" id="gift-grid">
+                <!-- สร้างด้วย JS -->
+            </div>
+        </div>
+
+        <!-- หน้าจอสำเร็จ: การ์ดอวยพรและรูปภาพ -->
+        <div id="screen-success" class="screen">
+            <div class="kitty-avatar" style="font-size: 2.5rem;">🎉🎂💖</div>
+                <h1>เย้! ผ่านภารกิจทั้งหมดแล้ว!</h1>
+            
+            <div class="postcard-container">
+                <!-- ช่องใส่รูปภาพ (คลิกเพื่ออัปโหลดรูปตัวเองได้) -->
+                
+                   <img src="image/qr.png" alt="qr" style="display: block; margin: auto; max-width: 100%; max-height: 100%; object-fit: contain;">
+                 
+                <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="loadPhoto(event)">
+
+                <!-- การ์ดจดหมายคำอวยพร -->
+                <div class="letter-content">
+                    <h3>HBD To You! 🎀✨</h3>
+                    <p style="text-align: center;">ยังไม่จบ!!!!! สแกนก่อนน้าา 🍰 🎈</p>
+                </div>
+            </div>
+
+            <button class="btn" onclick="location.reload()">เล่นใหม่อีกครั้ง 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        // เปลี่ยนหน้าจอ
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // --- เกมส์ที่ 1: เก็บหัวใจ ---
+        let heartsCollected = 0;
+        const totalHearts = 5;
+        let heartTimer = null;
+
+        function startGame() {
+            switchScreen('screen-game1');
+            heartsCollected = 0;
+            const area = document.getElementById('game1-area');
+            area.innerHTML = '';
+
+            heartTimer = setInterval(() => {
+                if (heartsCollected >= totalHearts) {
+                    clearInterval(heartTimer);
+                    setTimeout(goToGame2, 600);
+                    return;
+                }
+                createHeart(area);
+            }, 550);
+        }
+
+        function createHeart(area) {
+            const heart = document.createElement('div');
+            heart.className = 'collectible';
+            heart.innerHTML = Math.random() > 0.5 ? '💖' : '🎀';
+            
+            const maxX = area.clientWidth - 40;
+            const startX = Math.random() * Math.max(0, maxX);
+            heart.style.left = startX + 'px';
+            heart.style.bottom = '0px';
+
+            let currentBottom = 0;
+            const speed = 2 + Math.random() * 2;
+
+            const moveInterval = setInterval(() => {
+                currentBottom += speed;
+                heart.style.bottom = currentBottom + 'px';
+                if (currentBottom > area.clientHeight) {
+                    clearInterval(moveInterval);
+                    if (heart.parentNode) heart.parentNode.removeChild(heart);
+                }
+            }, 30);
+
+            heart.onclick = () => {
+                clearInterval(moveInterval);
+                heart.remove();
+                heartsCollected++;
+                if (heartsCollected >= totalHearts) {
+                    clearInterval(heartTimer);
+                    setTimeout(goToGame2, 500);
+                }
+            };
+
+            area.appendChild(heart);
+        }
+
+        // --- เกมส์ที่ 2: จุดเทียน ---
+        let litCount = 0;
+        function goToGame2() {
+            switchScreen('screen-game2');
+            litCount = 0;
+            document.querySelectorAll('.candle-slot').forEach(slot => {
+                slot.classList.remove('lit');
+                slot.innerHTML = '🕯️';
+            });
+            document.getElementById('next-btn-2').style.display = 'none';
+        }
+
+        function lightCandle(slot) {
+            if (!slot.classList.contains('lit')) {
+                slot.classList.add('lit');
+                slot.innerHTML = '🎂';
+                litCount++;
+                if (litCount === 3) {
+                    document.getElementById('next-btn-2').style.display = 'inline-block';
+                }
+            }
+        }
+
+        // --- เกมส์ที่ 3: กล่องสุ่มโบว์ ---
+        function goToGame3() {
+            switchScreen('screen-game3');
+            const grid = document.getElementById('gift-grid');
+            grid.innerHTML = '';
+            
+            // สุ่มตำแหน่งกล่องที่มีโบว์ (0 ถึง 5)
+            const winningIndex = Math.floor(Math.random() * 6);
+
+            for (let i = 0; i < 6; i++) {
+                const card = document.createElement('div');
+                card.className = 'gift-card';
+                card.innerHTML = '🎁';
+                card.onclick = () => {
+                    if (card.classList.contains('opened')) return;
+                    card.classList.add('opened');
+                    if (i === winningIndex) {
+                        card.innerHTML = '🎀';
+                        setTimeout(() => {
+                            switchScreen('screen-success');
+                        }, 700);
+                    } else {
+                        card.innerHTML = '❌';
+                    }
+                };
+                grid.appendChild(card);
+            }
+        }
+
+        // ฟังก์ชันอัปโหลดรูปภาพลงกรอบ
+        function loadPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('uploaded-photo');
+                    const text = document.querySelector('.photo-placeholder-text');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    text.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>
